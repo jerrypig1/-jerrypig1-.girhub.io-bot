@@ -1,115 +1,478 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>互動式音樂點播系統</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-        }
+import time
+import discord
+import pygame
+from playsound import playsound
+from discord.ext import commands
+# from selenium import webdriver
+import asyncio
+import itertools
+import sys
+import traceback
+from async_timeout import timeout
+from functools import partial
+from selenium.webdriver.common.keys import Keys
+import os, sys
+import random
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+from pytube import YouTube
+from translate import Translator
+from discord.ext.commands import Bot
+# import keep_alive
+# from forever import forever
+from keep_alive import keep_alive
 
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
 
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+i = 0
+client = commands.Bot(command_prefix="", intents=discord.Intents.all())
+path = 'chromedriver.exe'
+playing_list = []
+choose = ['零']
 
-        p, select, input {
-            font-size: 18px;
-            margin: 10px 0;
-        }
+name = [
+    'jerrypig.#0', 'polarbear1212#0', 'yaqianjingling#0', 'haoyue1211#0',
+    'miruko_nana#0', 'muffin_theguy#0', 'banqiao_0519#0', 'Konovi#7613',
+    'nichichiya#0', 'tsu1127#0', 'ground_hog0#0', '8kai_jie#0', 'amy9375#0',
+    'blackmipupu#0', '_nachiii#0', 'shuu4zi4#0', 'damelives0426#0',
+    'sxxypumpkin#0', '落櫻飄雪#6207', '.kulou#0', 'elisher_1021#0', 'wild638#0',
+    'zola11.#0','shadowlove889966#0'
+]
+name1 = [
+    '冠宇', '白熊', 'ㄉㄇ', '大哥', '娜娜', '小黑', '板橋', '柯柯', '日茶', '燕珍', '土撥鼠', '八凱',
+    '大餅', '黑貓', 'NA7', '數字', '阿呆', '稍微', '笨笨', '骷髏', '千千', '落葉', '柯柯','笨笨'
+]
+n = 24
+@client.event
+async def on_voice_state_update(member, before, after):
+    channel2 = discord.utils.get(client.get_all_channels(),
+                                 guild__name='123',
+                                 name='m')
+    channel1 = discord.utils.get(member.guild.channels, name="聲之形")
+    if before.channel is None and after.channel is not None:
+        for r in range(n):
+            if F'{member}' == name[r]:
+                await channel2.send(content=(f"{name1[r]}在{member.guild}的{after.channel}出現"))
 
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+                await asyncio.sleep(1)
+    elif before.channel != after.channel and after.channel != None:
+        for r in range(n):
+            if F'{member}' == name[r]:
+                await channel2.send(content=(f"{name1[r]}從{member.guild}的{before.channel}前往{member.guild}的{after.channel}"))
+                await asyncio.sleep(1)
+    elif after.channel is None:
+        for r in range(n):
+            if F'{member}' == name[r]:
+                await channel2.send(content=(f"{name1[r]}在{member.guild}的{before.channel}離開"))
+                await asyncio.sleep(1)
 
-        input[type="submit"] {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            align-items: left;
-            cursor: pointer;
-        }
+@client.event
+async def on_message(ctx):
+    channel2 = discord.utils.get(client.get_all_channels(),
+                                guild__name='123',
+                                name='m')
+    member = ctx.author
+    for r in range(n):
+        if F'{member}' == name[r]:
+            await channel2.send((f"{name1[r]}在{ctx.guild}的{ctx.channel}說話內容是:{ctx.content}"))
+            await asyncio.sleep(1)    
+@client.command()
+async def 骰(ctx, us2: int = ''):
+    a = []  #力量
+    b = []  #體質
+    c = []  #敏捷
+    d = []  #外表
+    e = []  #意志
+    f = []  #幸運
+    g = []  #體型
+    h = []  #智力
+    j = []  #教育
+    for i in range(1, us2 + 1):
+        a.append((random.randint(1, 6) + random.randint(1, 6) +
+                  random.randint(1, 6)) * 5)
+    for i in range(1, us2 + 1):
+        b.append((random.randint(1, 6) + random.randint(1, 6) +
+                  random.randint(1, 6)) * 5)
+    for i in range(1, us2 + 1):
+        c.append((random.randint(1, 6) + random.randint(1, 6) +
+                  random.randint(1, 6)) * 5)
+    for i in range(1, us2 + 1):
+        d.append((random.randint(1, 6) + random.randint(1, 6) +
+                  random.randint(1, 6)) * 5)
+    for i in range(1, us2 + 1):
+        e.append((random.randint(1, 6) + random.randint(1, 6) +
+                  random.randint(1, 6)) * 5)
+    for i in range(1, us2 + 1):
+        f.append((random.randint(1, 6) + random.randint(1, 6) +
+                  random.randint(1, 6)) * 5)
+    for i in range(1, us2 + 1):
+        g.append((random.randint(1, 6) + random.randint(1, 6) + 6) * 5)
+    for i in range(1, us2 + 1):
+        h.append((random.randint(1, 6) + random.randint(1, 6) + 6) * 5)
+    for i in range(1, us2 + 1):
+        j.append((random.randint(1, 6) + random.randint(1, 6) + 6) * 5)
+    await ctx.send(f'力量:{a}')
+    await ctx.send(f'敏捷:{c}')
+    await ctx.send(f'意志:{e}')
+    await ctx.send(f'體質:{b}')
+    await ctx.send(f'外表:{d}')
+    await ctx.send(f'教育:{j}')
+    await ctx.send(f'體型:{g}')
+    await ctx.send(f'智力:{h}')
+    await ctx.send(f'幸運:{f}')
+    #特徵
+    for i in range(1, us2 + 1):
+        a6 = random.randint(1, 6)
+        a20 = random.randint(1, 20)
+        await ctx.send(F'{a6,a20}')
+        if a6 == 1 and a20 == 1:
+            await ctx.send('任意	任意選擇一個有(D)記號的特徵。')
+        elif a6 == 1 and a20 == 2:
+            await ctx.send('年齡追加[(1D3＋1)x10]歲。')
+        elif a6 == 1 and a20 == 3:
+            await ctx.send(' 40歲開始對身體能力造成減值的規則改為從50歲開始。')
+        elif a6 == 1 and a20 == 4:
+            await ctx.send(
+                'STR、CON、SIZ、DEX、POW、APP中的任意一項減少15點。在明亮陽光下時「觀察」技能值減少(1D4-1)x5%，長時間受到光照的話會受到1點以上的傷害。白化病人在人群中很顯眼並可能被他人用有色目光看待。'
+            )
+        elif a6 == 1 and a20 == 5:
+            await ctx.send(
+                'CON-5。STR、DEX、POW、APP中任意一項減少5點。為了避免陷入酩酊大醉需要通過一個理智判定。陷入發瘋的情況下，調查員可能會尋求酒精來逃避現實。'
+            )
+        elif a6 == 1 and a20 == 6:
+            await ctx.send('不易被驚嚇到。被偷襲時總是能投擲「觀察」或者「聆聽」來判斷他是否察覺到了。')
+        elif a6 == 1 and a20 == 7:
+            await ctx.send('投擲1D100來決定同盟的力量／數量和出現的頻率(1D100的出點越大可能能夠獲得越有利的同盟)。')
+        elif a6 == 1 and a20 == 8:
+            await ctx.send('調查員可以靈活的使用他的任意一隻手而不會受到非慣用手的懲罰。')
+        elif a6 == 1 and a20 == 9:
+            await ctx.send('技能檢定涉及動物時(例如：騎馬、駕駛馬車、特定情況的潛行、潛行)，技能成功率-1D6x5點。')
+        elif a6 == 1 and a20 == 10:
+            await ctx.send('音樂、寫作之類的藝術技能總共＋INT%。')
+        elif a6 == 1 and a20 == 11:
+            await ctx.send(
+                '運動類技能獲得加值＝選擇一個技能＋30%，或者選擇兩個技能各＋20%，或者選擇三個技能各＋10%。運動類技能包括：  藝術／手藝(Art／Craft), 攀爬, 閃避, 潛行／隱身, 跳躍, 射擊(機關槍), 操作重機, 騎術, 游泳 和  投擲'
+            )
+        elif a6 == 1 and a20 == 12:
+            await ctx.send('黑暗相關的懲罰只有常人的一半。')
+        elif a6 == 1 and a20 == 13:
+            await ctx.send(
+                '調查員出生於世家但是卻沒能達到家人的期待，或者不服管教。對於交際類技能可能會造成影響-1D3x10%。')
+        elif a6 == 1 and a20 == 14:
+            await ctx.send(
+                'POW＋1D2x5，任選交際類技能總共＋INT%。交際類技能包括： 藝術／手藝, 信譽／信譽, 喬裝, 話術／花言巧語, 外語, 母語, 說服, 心理學'
+            )
+        elif a6 == 1 and a20 == 15:
+            await ctx.send('「鬥毆」＋1D4x5%，每回合可以進行兩次「鬥毆」，攻擊成功時＋1點傷害。')
+        elif a6 == 1 and a20 == 16:
+            await ctx.send('大失敗的幾率x2，並且大失敗時可能會招致災難。')
+        elif a6 == 1 and a20 == 17:
+            await ctx.send('調查員有收集硬幣、書、昆蟲、藝術作品、寶石、古董之類的愛好。')
+        elif a6 == 1 and a20 == 18:
+            await ctx.send(
+                '失去了身體的一部分。投擲1D6： 1～2＝腳, 3～4＝手, 5＝頭部(投擲1D6,1～3＝眼睛,4～6＝耳朵), 6＝玩家自己選擇。失去腳的話DEX-15、STR或CON-5，MOVE只有常人的一半，所有運動類技能-25%；失去手腕的話STR-5、DEX-10，所有的操作類技能-15%，使用武器會受到限制;失去眼睛的話，觀察，射擊技能和跟視覺有關的技能等全部-35%，另外投擲一個「幸運」，失敗的話APP-1D2x5；以及失去耳朵的話APP- (1D3)x5，「聆聽」等和耳朵有關的技能全部-30%。運動類技能包括：  藝術／手藝(Art／Craft), 攀爬, 閃避, 潛行／隱身, 跳躍, 射擊(機關槍), 操作重機, 騎術, 游泳 和 投擲。操作類技能包括：  藝術／手藝(Art／Craft), 巧手, 喬裝, 汽車駕駛, 電器維修, 急救, 射擊(手槍),  鎖匠, 機械維修, 藝術／手藝(攝影), 導航(Pilot) , 射擊(步槍／霰彈槍) , 射擊(衝鋒槍)。																	'
+            )
+        elif a6 == 1 and a20 == 19:
+            await ctx.send('再投擲三次，由玩家選擇其中一個作為特徵。')
+        elif a6 == 1 and a20 == 20:
+            await ctx.send('再投擲三次，玩家和KP各選擇一個特徵。')
+        elif a6 == 2 and a20 == 1:
+            await ctx.send(
+                '再投擲一次，獲得那個特徵，特徵具有(D),時玩家可以再額外選擇一個其他任意特徵獲得。特徵沒有(D)時，玩家必須再同時選擇一個(D)特徵。'
+            )
+        elif a6 == 2 and a20 == 2:
+            await ctx.send(
+                '調查員被吉普賽人、魔女、法師、外國原住民等施予了詛咒，詛咒效果等同「邪眼術」咒文或由KP決定。KP也可以決定解除詛咒的條件。「邪眼術」參考魔法第4007項'
+            )
+        elif a6 == 2 and a20 == 3:
+            await ctx.send('調查員具有邪惡的一族，外國人、食人族、甚至神話生物的血統。投擲1D100，出點愈大，血統也愈恐怖。')
+        elif a6 == 2 and a20 == 4:
+            await ctx.send('「聆聽」減少2D4x5%。')
+        elif a6 == 2 and a20 == 5:
+            await ctx.send(
+                '調查員身患絕症(癌症、失明、梅毒、肺結核等)，絕症對調查員造成惡劣影響，至少失去5點CON，如果病情繼續惡化的話還會繼續失去其他能力值。投擲1D100來決定剩餘壽命，出點越大壽命越長'
+            )
+        elif a6 == 2 and a20 == 6:
+            await ctx.send(
+                '調查員具有巨大的傷痕或者身體變形等特徵，APP至少-1D4 x5。對交際類技能也可能-(失去的APP)%。交際類技能包括： 藝術／手藝, 信譽／信譽, 喬裝, 話術／花言巧語, 外語, 母語, 說服, 心理學'
+            )
+        elif a6 == 2 and a20 == 7:
+            await ctx.send('不易喝醉。酒精作為毒素處理的情況下， 毒藥級別下降一級或得到獎勵骰。')
+        elif a6 == 2 and a20 == 8:
+            await ctx.send('「觀察」＋2D3x5%。')
+        elif a6 == 2 and a20 == 9:
+            await ctx.send(
+                '有對調查員不利的敵人存在，投擲1D100來決定敵人的力量／數量以及出現頻率，數值越大越惡劣。用途似乎有限？')
+        elif a6 == 2 and a20 == 10:
+            await ctx.send(
+                '一枝槍的正常射程＋50%；一樣近戰類武器，用家的技能成功率＋5%或者傷害＋1D2； 以及武器不易被破壞(具有更多的耐久度) 或 入手的武器具有比一般的武器更高的品質。'
+            )
+        elif a6 == 2 and a20 == 11:
+            await ctx.send('調查員擁有繪畫、書籍、武器、傢俱等具有高價值的寶物。也可能是模組中追加的寶物的持有人。')
+        elif a6 == 2 and a20 == 12:
+            await ctx.send('DEX＋5。再投擲1D6，1～4時MOVE＋1，5～6時MOVE＋2')
+        elif a6 == 2 and a20 == 13:
+            await ctx.send(
+                '進行一次「幸運」鑒定。成功的話調查員獲得 (INT／5＋POW／5) x2%的「賭博」技能。失敗的話只有(INT／5 或 POW／5 )%的技能值，資產減少1D6x 10%，並且調查員遇到賭博時需要通過一個理智判定才能克制自己。'
+            )
+        elif a6 == 2 and a20 == 14:
+            await ctx.send('獲得(INTorEDU)%的「藝術／手藝(料理)」技能。')
+        elif a6 == 2 and a20 == 15:
+            await ctx.send('「聆聽」＋2D3x5%。')
+        elif a6 == 2 and a20 == 16:
+            await ctx.send('「心理學」＋2D3x5%。')
+        elif a6 == 2 and a20 == 17:
+            await ctx.send('投擲1D6。1～3＝DEX＋5，4～5＝DEX＋10，6＝DEX＋15。')
+        elif a6 == 2 and a20 == 18:
+            await ctx.send('技能和動物有關時＋(1D6＋1)x5%，例如騎馬、駕駛馬車、特定情況的潛行／隱身等。')
+        elif a6 == 2 and a20 == 19:
+            await ctx.send('可以選擇任意技能(可多選)，獲得總計3D20點技能加值。')
+        elif a6 == 2 and a20 == 20:
+            await ctx.send('玩家自己選擇一個特徵。')
+        elif a6 == 3 and a20 == 1:
+            await ctx.send('再投擲三次，玩家和KP各選擇一個特徵。')
+        elif a6 == 3 and a20 == 2:
+            await ctx.send('對調查員來說金錢至上。任何狀況下都優先考慮金錢。為此或許會欺騙其他人…也許，其他調查員也包括在內？')
+        elif a6 == 3 and a20 == 3:
+            await ctx.send('SAN-1D10，玩家和KP給調查員設定一個背景(失去愛人、子孫或者其他血親的悲劇)。')
+        elif a6 == 3 and a20 == 4:
+            await ctx.send(
+                '玩家和KP商議決定，調查員對於特定的國籍、人種或者宗教信仰持有非理性的反感。(例如：愛爾蘭人，英國人，威爾士人，法國人，西班牙人，荷蘭人，德國人，阿拉伯人，天主教徒，執法人員，犯罪者…等)PL和KP應該討論(他們憎恨的)是甚麼人以及為甚麼調查員與這些人交流時幾乎不能收起自己(對他們)的敵意。'
+            )
+        elif a6 == 3 and a20 == 5:
+            await ctx.send('CON＋1D3x5。')
+        elif a6 == 3 and a20 == 6:
+            await ctx.send(
+                '"追求個人的喜悅(美食、飲品、性、衣裝、音樂、傢俱等)。為此浪費了(1D4＋2)x10%的資產。通過一個「幸運」判定，失敗的話因為這種放縱的生活而失去5點STR、CON、INT、POW、DEX或APP。"'
+            )
+        elif a6 == 3 and a20 == 7:
+            await ctx.send('「騎馬」技能＋(1D6＋1)x10%。')
+        elif a6 == 3 and a20 == 8:
+            await ctx.send('有不考慮後果輕率的行動的傾向。根據情況可能需要通過一個減半的「靈感」判定來使頭腦冷靜。')
+        elif a6 == 3 and a20 == 9:
+            await ctx.send(
+                '二選一。(A)「靈感」＋10%，獲得可以臨時組裝或者發明一些裝置的能力。(B)武器以外的操縱類技能獲得加值，只選擇一個技能的話＋30%，選擇2個技能各＋20%，3個各＋10%。操作類技能包括：  藝術／手藝(Art／Craft), 巧手, 喬裝, 汽車駕駛, 電器維修, 急救, 射擊(手槍),  鎖匠, 機械維修, 藝術／手藝(攝影), 導航(Pilot) , 射擊(步槍／霰彈槍) , 射擊(衝鋒槍)。'
+            )
+        elif a6 == 3 and a20 == 10:
+            await ctx.send('SAN-1D8。玩家和KP商議給予調查員一個精神障礙。')
+        elif a6 == 3 and a20 == 11:
+            await ctx.send(
+                '調查員對某一篇地域瞭解的非常詳細(例建築配置、道路、商業、住民、歷史等)。對應的區域應為都市某一塊區域或者單個農村之類的較狹小的範圍。對於這篇區域的詳細情況調查員通過「知識」或「靈感」判定即可知曉。'
+            )
+        elif a6 == 3 and a20 == 12:
+            await ctx.send('POW＋1D3x5，SAN也獲得對應的上升。')
+        elif a6 == 3 and a20 == 13:
+            await ctx.send(
+                'APP＋1D3x5，和異性溝通時交際類技能＋1D3x10%。交際類技能包括： 藝術／手藝, 信譽／信譽, 喬裝, 話術／花言巧語, 外語, 母語, 說服, 心理學'
+            )
+        elif a6 == 3 and a20 == 14:
+            await ctx.send(
+                '調查員擁有某種巨大(大小上)而值錢的東西(例船隻、工廠、房屋、礦山、大塊的土地等)。對於這東西，玩家和KP要慎重討論，因為那東西或許需要花費調查員很多時間和精力。'
+            )
+        elif a6 == 3 and a20 == 15:
+            await ctx.send(
+                '調查員即使言語不通也有可能和其他人成功溝通，增加一個輔助技能「語言學家」，初期技能值為(INTorEDU)／5%。')
+        elif a6 == 3 and a20 == 16:
+            await ctx.send(
+                '調查員有著失蹤很久的家人,有可能會在模組中登場(例兄弟／姐妹／或者其他親人遭遇海難、死在海外、被其他親戚帶走等情況)。')
+        elif a6 == 3 and a20 == 17:
+            await ctx.send(
+                '調查員不會拋棄或虧待自己的家人、朋友和夥伴，而且在力所能及的範圍內一定會幫助他們。這聲譽也使他在本地使用交際類技能(Communication)時成功率＋10%。交際類技能包括： 藝術／手藝, 信譽／信譽, 喬裝, 話術／花言巧語, 外語, 母語, 說服, 心理學'
+            )
+        elif a6 == 3 and a20 == 18:
+            await ctx.send('學習咒文時只需要正常的一半時間，成功率也增加INT／5%。')
+        elif a6 == 3 and a20 == 19:
+            await ctx.send('額外獲得3D20的技能點。')
+        elif a6 == 3 and a20 == 20:
+            await ctx.send('玩家自己選擇一個特徵。')
+        elif a6 == 4 and a20 == 1:
+            await ctx.send('調查員的持有現金為通常規則的2倍。')
+        elif a6 == 4 and a20 == 2:
+            await ctx.send(
+                'KP應給予調查員持有一些附魔道具 (例如是能傷害神話生物的武器、召喚(神話)生物時會用的道具、占卜用品和POW儲藏器等等)。如有需要，調查員可以通過一個POW／5的檢定來知道這件道具的本質。'
+            )
+        elif a6 == 4 and a20 == 3:
+            await ctx.send('從射擊（手槍）和射擊（步槍／霰彈槍）中二擇一，選擇的這項技能＋2D3x5%。')
+        elif a6 == 4 and a20 == 4:
+            await ctx.send(
+                '調查員被頻繁的被誤認為其他人，通常都會是些有著惡評的人物(罪犯、身懷醜聞的惡人之類的)。模組中在合適的情況下「幸運」可能會被降為原本的一半(簡單來說，調查員因為某些理由獲得其他人的犯罪歷史、惡名、通過詐騙獲得的財富或者權力這樣的身份或者特徵)。'
+            )
+        elif a6 == 4 and a20 == 5:
+            await ctx.send(
+                '通過一個「靈感」判定，調查員就可以得知1D6＋1小時裡的正確天氣情況，有多大的降雨量、下雨的場所、風級、持續時間等等。')
+        elif a6 == 4 and a20 == 6:
+            await ctx.send(
+                'APP＋5，但是調查員為了讓自己看起來亮麗動人而花費大量的金錢來購買華貴的服飾和飾物。儲蓄和資產減半。')
+        elif a6 == 4 and a20 == 7:
+            await ctx.send(
+                '調查員擁有和模組有關的重要手寫／複印資料 (例： 刊物、魔法書、歷史文獻、聖經、神話典籍、地圖等等)。KP可以決定這件道具的性質和價值。'
+            )
+        elif a6 == 4 and a20 == 8:
+            await ctx.send(
+                'SAN-1D6。調查員擁有從恐怖環境中生還的經驗(海難、戰爭、恐怖分子劫持、地震等等)。因為這個經歷可能給調查員帶來某種長久的影響(通常程度的恐怖症狀，或者其他的精神障礙等)。'
+            )
+        elif a6 == 4 and a20 == 9:
+            await ctx.send('調查員相依為命的家人都不在了，或者不知道自己真正的家人是誰。')
+        elif a6 == 4 and a20 == 10:
+            await ctx.send('調查員可以追加獲得一項其他語言技能，技能值為1D4xINT／5%。')
+        elif a6 == 4 and a20 == 11:
+            await ctx.send('「導航術」、「自然學」、「追蹤」各＋(2D3＋1)x5%(分別投擲)。')
+        elif a6 == 4 and a20 == 12:
+            await ctx.send('模組中登場的某位角色欠了調查員人情。由KP決定是哪位角色、為什麼以及人情有多大。')
+        elif a6 == 4 and a20 == 13:
+            await ctx.send('調查員欠了某人人情。由KP決定是欠了哪位角色的人情以及其因由...等等')
+        elif a6 == 4 and a20 == 14:
+            await ctx.send(
+                '調查員因精神、疾病等原因苦於身體抽搐、扭曲等症狀。DEX-1D2x5； 以及進行一次「幸運」判定，失敗的話APP-5。')
+        elif a6 == 4 and a20 == 15:
+            await ctx.send(
+                '調查員曾經經歷過難以說明的遭遇(幽靈、黑魔法、神話生物、超能力等)。玩家和KP討論決定其內容並失去最多1D6點SAN值。')
+        elif a6 == 4 and a20 == 16:
+            await ctx.send(
+                '這位調查員怎麼說也太胖了點。進行一次「幸運」判定，失敗的話投擲1D6，1～3 CON-5，4～6 APP-5。')
+        elif a6 == 4 and a20 == 17:
+            await ctx.send('「說服」＋(2D3＋1)x5%。')
+        elif a6 == 4 and a20 == 18:
+            await ctx.send('調查員有養狗、貓或者鳥類。')
+        elif a6 == 4 and a20 == 19:
+            await ctx.send('任意技能獲得3D20點技能點。')
+        elif a6 == 4 and a20 == 20:
+            await ctx.send(
+                '再投擲一次，獲得那個特徵，特徵具有(D)時，玩家可以再額外選擇一個其他任意特徵獲得。特徵沒有(D)時，玩家必須再同時選擇一個(D)特徵。'
+            )
+        elif a6 == 5 and a20 == 1:
+            await ctx.send('職業技能 額外獲得3D20點成長技能點。')
+        elif a6 == 5 and a20 == 2:
+            await ctx.send(
+                '調查員身患恐怖症狀或者瘋狂症狀。參考7版標準規則隨機決定症狀，或者選擇想要的症狀。遭遇到自身症狀根源的恐怖或者物品時，如果理智判定失敗，那麼調查員將無法抑制自己的恐怖或者被取悅。'
+            )
+        elif a6 == 5 and a20 == 3:
+            await ctx.send(
+                '調查員在政治,經濟或者甚至軍事環境裡持有某種程度的權力。投擲1D100，出點越大權力越大。企業地位影響融資，政治地位可能所屬某種政府機關，軍隊地位遠超本身擁有的軍銜也說不定。「信譽度」＋25%。詳細的情況和KP商議決定。'
+            )
+        elif a6 == 5 and a20 == 4:
+            await ctx.send('玩家可以選擇獲得(EDU)%的職業成長技能點數。')
+        elif a6 == 5 and a20 == 5:
+            await ctx.send(
+                '由KP決定,遊戲中玩家會做一個預言未來的夢，這會需要一個POW／5 x3%的判定。夢境沒有必須符合現實的必要，如果夢境中見到的景象十分恐怖的話那麼會失去一些SAN值(現實中見到相同景象失去SAN值的10%左右)。鑒定失敗的話玩家會獲得錯誤的預言"'
+            )
+        elif a6 == 5 and a20 == 6:
+            await ctx.send(
+                '調查員的年收入和資產變成兩倍。「信譽度」＋1D4x5%。以下二選一：調查員的業務規模變得更大而且更成功；或調查員替富翁、持有權力的人做事或者與他們共事。'
+            )
+        elif a6 == 5 and a20 == 7:
+            await ctx.send(
+                '接觸某些物體時(或者抵達某個地方時)，通過一個POW／5的判定，成功的話可以窺視到這個物品／地方的過去。這個能力的正確度由KP決定。這個能力消耗1D6點MP。因為幻覺也可能失去SAN值(和上述的「預知夢」類似，損失通常的10%左右)。'
+            )
+        elif a6 == 5 and a20 == 8:
+            await ctx.send(
+                '「話術」＋2D4x5%。調查員有著非常厲害的語言術，可以通過講故事獲得朋友的信任、降低敵人的敵意、賺到一頓免費的餐點也是可能的。'
+            )
+        elif a6 == 5 and a20 == 9:
+            await ctx.send(
+                '調查員通過一個INT／4的判定的話，可能會持有一些生活中完全不常見，或一般來說不會有的技能。罕見的語言、格鬥技、駕駛熱氣球之類，和KP商議決定。'
+            )
+        elif a6 == 5 and a20 == 10:
+            await ctx.send('調查員有著一頭好像燃燒著一般的紅髮，非常顯眼(沒有其他效果)。')
+        elif a6 == 5 and a20 == 11:
+            await ctx.send(
+                '進行一次「幸運」判定，成功的話調查員被人尊敬(設定其理由)，調查員在自家所在的村子／都市中所有的交際類技能獲得15%的加值。 「幸運」判定失敗的話調查員的聲望受損(設定其理由)，自家所在的村子／都市所有的交際類技能-15%。KP也可以決定通過良好的業績來抵消這個惡評。交際類技能包括： 藝術／手藝, 信譽／信譽, 喬裝, 話術／花言巧語, 外語, 母語, 說服, 心理學'
+            )
+        elif a6 == 5 and a20 == 12:
+            await ctx.send(
+                '調查員相信自己受到了不公正的待遇並且對導致自己受到這種惡意的(壞)人進行報復行為。玩家和KP討論決定敵人的真身。投擲1D100來決定敵人的強度和調查員受到這種不公正的程度。'
+            )
+        elif a6 == 5 and a20 == 13:
+            await ctx.send(
+                '進行一次「幸運」判定。成功的話傷痕沒有影響調查員的外觀，甚至彰顯其英勇也說不定。失敗的話APP-1D3x5%，交際類技能-1D3x5%。交際類技能包括： 藝術／手藝, 信譽／信譽, 喬裝, 話術／花言巧語, 外語, 母語, 說服, 心理學'
+            )
+        elif a6 == 5 and a20 == 14:
+            await ctx.send(
+                '「靈感」＋5%。並且選擇一個思考類技能＋30%，再選擇2個思考類技能＋20%，和一個思考類技能＋10%。思考類技能包括：會計, 考古學, 藝術／手藝, 科學(天文學,生物學,地質學,藥學,物理學,自然學,人類學), 克蘇魯神話(請和KP商量),歷史, 法律, 圖書館使用, 醫學,  導航(Navigate), 神秘學, 精神分析'
+            )
+        elif a6 == 5 and a20 == 15:
+            await ctx.send(
+                '調查員有著決不能告訴別人的秘密。調查員的鄰居可能會有些線索也說不定。調查員可能是個罪犯、間諜，或者賣國賊之類的也說不定。內容由玩家和KP商議決定。'
+            )
+        elif a6 == 5 and a20 == 16:
+            await ctx.send(
+                '調查員所屬於秘密主義的團體，可能會是共濟會、薔薇十字團、神志主義者、煉金術師結社、光明會之類團體的一員。或者是地下醫學研究者之類的犯罪／陰謀組織的一員。'
+            )
+        elif a6 == 5 and a20 == 17:
+            await ctx.send('EDU＋1D3x5，並增加因此獲得的技能值。')
+        elif a6 == 5 and a20 == 18:
+            await ctx.send(
+                '調查員過去曾經做過一些惹人懷疑的事情(賣淫、偷人等)，或者曾經犯下過某些重大罪行。所有的交際類技能-1D3x10%。交際類技能包括： 藝術／手藝, 信譽／信譽, 喬裝, 話術／花言巧語, 外語, 母語, 說服, 心理學'
+            )
+        elif a6 == 5 and a20 == 19:
+            await ctx.send(
+                '再投擲一次，獲得那個特徵，特徵具有(D)時，玩家可以再額外選擇一個其他任意特徵獲得。特徵沒有(D)時，玩家必須再同時選擇一個(D)特徵。'
+            )
+        elif a6 == 5 and a20 == 20:
+            await ctx.send('再投擲兩次並獲得那兩個特徵。')
+        elif a6 == 6 and a20 == 1:
+            await ctx.send('再投擲三次，玩家和KP各選擇一個特徵。')
+        elif a6 == 6 and a20 == 2:
+            await ctx.send('CON-1D3x5。')
+        elif a6 == 6 and a20 == 3:
+            await ctx.send('巧手技能＋DEX%，可以在偷竊或者魔術的時候使用。')
+        elif a6 == 6 and a20 == 4:
+            await ctx.send('MOVE-1。')
+        elif a6 == 6 and a20 == 5:
+            await ctx.send(
+                '探索者因為國籍、性別、人種、宗教或者過去的犯罪記錄等原因失去了社會上的名譽地位。作為其影響，調查員可能減少自由活動時間甚至所有的交際類技能-1D4x10%甚至更多。具體的影響玩家和KP商議決定。'
+            )
+        elif a6 == 6 and a20 == 6:
+            await ctx.send('調查員獲得INT點的技能點加到士兵的職業技能上。')
+        elif a6 == 6 and a20 == 7:
+            await ctx.send('由KP決定，調查員最多可以獲知1D3種咒文，SAN-1D6。')
+        elif a6 == 6 and a20 == 8:
+            await ctx.send(
+                '調查員見到血液或者流血就會感覺到身體不適，失去更多的SAN值。也可能因為疾病的原因無法靠近或通過流血現場。')
+        elif a6 == 6 and a20 == 9:
+            await ctx.send(
+                '調查員不受到現實中的血跡或者流血的影響。遭遇血跡和流血時SAN損失為最小值，即使見到最殘虐的場合(大量被撕裂的人,被獵奇殺死的屍體等)也最多只減少通常的一半。'
+            )
+        elif a6 == 6 and a20 == 10:
+            await ctx.send('STR＋1D3x5。')
+        elif a6 == 6 and a20 == 11:
+            await ctx.send(
+                '調查員迷信不疑，依賴著護身符、儀式或者愚蠢的信念。遭遇超自然現象的時候比通常多損失1點SAN值，即使原本不損失的情況下可能變成損失1點。'
+            )
+        elif a6 == 6 and a20 == 12:
+            await ctx.send(
+                '調查員選擇一個交際類技能＋30%或者選擇兩個各＋20%，然後額外再選擇一個＋10%。交際類技能包括： 藝術／手藝, 信譽／信譽, 喬裝, 話術／花言巧語, 外語, 母語, 說服, 心理學'
+            )
+        elif a6 == 6 and a20 == 13:
+            await ctx.send(
+                '調查員因為一些緣由擁有一個對自己忠實並幫助自己的協助者。來決定這個協助者的真身和影響(依舊可以1D100來決定)。並且1D100也決定其頻率。'
+            )
+        elif a6 == 6 and a20 == 14:
+            await ctx.send(
+                '看不見的財產 "調查員有一筆自己不知道的財產。這可能是親人遺贈的或者理事會之類授予的。這可能會是一塊土地、房屋或者事業……等。這依舊可以用1D100來決定其價值程度。(繼承)這筆財產可能會伴隨著意想不到的後果'
+            )
+        elif a6 == 6 and a20 == 15:
+            await ctx.send('STR-1D3x5。')
+        elif a6 == 6 and a20 == 16:
+            await ctx.send(
+                '調查員要看清東西必須戴眼鏡。進行一個「幸運」判定，成功的話眼鏡只在讀書或者進行精細工作的時候才需要。失敗的話，(調查員在進行)激烈運動等情況時可能會丟失眼鏡，和視覺相關的技能-1D3x10%。(對於只需要在讀書時使用眼鏡的調查員，如果他們丟失了眼鏡，進行精細工作的時候以上懲罰同樣適用)'
+            )
+        elif a6 == 6 and a20 == 17:
+            await ctx.send('調查員的「信譽度」＋10%，真是個有禮貌的紳士(淑女)。')
+        elif a6 == 6 and a20 == 18:
+            await ctx.send(
+                '調查員的年齡變成10＋2D3歲。最大EDU變成(年齡 ／ 2 ＋2)x5，DEX＋5，STR、CON、APP中任意一項＋5。玩家和KP商議決定，調查員大概和家人住在一起，職業等也需要重新修正。'
+            )
+        elif a6 == 6 and a20 == 19:
+            await ctx.send('任意選擇一項特徵。')
+        elif a6 == 6 and a20 == 20:
+            await ctx.send('投擲兩次，玩家任意選擇其中一項特徵。')
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        #dialogueContainer {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
-    <h1>互動式音樂點播系統</h1>
-    <form id="myForm">
-    <!-- <form method="POST" action="/process"> -->
-        <p>請選擇數量、風格、語言:</p>
-        數量:
-        <select type="text" id="user_input" name="user_input" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </select>
-        風格:
-        <select type="text" id="user_input1" name="user_input1" required>
-            <option value="動漫">動漫</option>
-            <option value="現代風">現代風</option>
-            <option value="搖滾風">搖滾風</option>
-        </select>
-        語言
-        <select type="text" id="user_input2" name="user_input2" required>
-            <option value="日文">日文</option>
-            <option value="英文">英文</option>
-            <option value="韓文">韓文</option>
-        </select>
-        <input type="submit" value="提交">
-    </form>
-     <!-- 顯示對話 -->
-     <div id="dialogueContainer"></div>
-
-     <script>
-         // 使用 jQuery 監聽表單提交事件
-         $(document).ready(function () {
-             $('#myForm').submit(function (e) {
-                 e.preventDefault(); // 防止表單正常提交
- 
-                 // 使用 AJAX 向伺服器發送請求
-                 $.ajax({
-                     type: 'POST',
-                     url: '/process',
-                     data: $('#myForm').serialize(), // 序列化表單數據
-                     success: function (response) {
-                         // 更新對話區域的內容
-                         $('#dialogueContainer').html(response);
-                     }
-                 });
-             });
-         });
-     </script>
-    <div>
-        {{ dialogue|safe }}
-    </div>
-</body>
-</html>
+if __name__ == "__main__":
+  # keep_alive.keep_alive()
+  keep_alive()
+  # forever()
+  # client.run(
+  #     'MTA4OTE3MzM2MzAzNDk1NTgzNg.Gd8iMMcNQKQpLa13j_A')
+  client.run('MTA4OTM3MzMwNTA1MzY1OTIyNg.GQJO-C.md0lUqEI9X_SZaV3HRICRXloLVFD15rg3j1OoU')
