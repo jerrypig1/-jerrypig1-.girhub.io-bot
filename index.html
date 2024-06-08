@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>互動式音樂點播系統</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        p, select, input {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            align-items: left;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #dialogueContainer {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>互動式音樂點播系統</h1>
+    <form id="myForm">
+    <!-- <form method="POST" action="/process"> -->
+        <p>請選擇數量、風格、語言:</p>
+        數量:
+        <select type="text" id="user_input" name="user_input" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        風格:
+        <select type="text" id="user_input1" name="user_input1" required>
+            <option value="動漫">動漫</option>
+            <option value="現代風">現代風</option>
+            <option value="搖滾風">搖滾風</option>
+        </select>
+        語言
+        <select type="text" id="user_input2" name="user_input2" required>
+            <option value="日文">日文</option>
+            <option value="英文">英文</option>
+            <option value="韓文">韓文</option>
+        </select>
+        <input type="submit" value="提交">
+    </form>
+     <!-- 顯示對話 -->
+     <div id="dialogueContainer"></div>
+
+     <script>
+         // 使用 jQuery 監聽表單提交事件
+         $(document).ready(function () {
+             $('#myForm').submit(function (e) {
+                 e.preventDefault(); // 防止表單正常提交
+ 
+                 // 使用 AJAX 向伺服器發送請求
+                 $.ajax({
+                     type: 'POST',
+                     url: '/process',
+                     data: $('#myForm').serialize(), // 序列化表單數據
+                     success: function (response) {
+                         // 更新對話區域的內容
+                         $('#dialogueContainer').html(response);
+                     }
+                 });
+             });
+         });
+     </script>
+    <div>
+        {{ dialogue|safe }}
+    </div>
+</body>
+</html>
