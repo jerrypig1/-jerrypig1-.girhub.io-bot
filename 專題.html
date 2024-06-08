@@ -24,7 +24,6 @@ from discord.ext.commands import Bot
 # from forever import forever
 from keep_alive import keep_alive
 
-
 i = 0
 client = commands.Bot(command_prefix="", intents=discord.Intents.all())
 path = 'chromedriver.exe'
@@ -37,13 +36,15 @@ name = [
     'nichichiya#0', 'tsu1127#0', 'ground_hog0#0', '8kai_jie#0', 'amy9375#0',
     'blackmipupu#0', '_nachiii#0', 'shuu4zi4#0', 'damelives0426#0',
     'sxxypumpkin#0', '落櫻飄雪#6207', '.kulou#0', 'elisher_1021#0', 'wild638#0',
-    'zola11.#0','shadowlove889966#0'
+    'zola11.#0', 'shadowlove889966#0'
 ]
 name1 = [
     '冠宇', '白熊', 'ㄉㄇ', '大哥', '娜娜', '小黑', '板橋', '柯柯', '日茶', '燕珍', '土撥鼠', '八凱',
-    '大餅', '黑貓', 'NA7', '數字', '阿呆', '稍微', '笨笨', '骷髏', '千千', '落葉', '柯柯','笨笨'
+    '大餅', '黑貓', 'NA7', '數字', '阿呆', '稍微', '笨笨', '骷髏', '千千', '落葉', '柯柯', '笨笨'
 ]
 n = 24
+
+
 @client.event
 async def on_voice_state_update(member, before, after):
     channel2 = discord.utils.get(client.get_all_channels(),
@@ -53,30 +54,38 @@ async def on_voice_state_update(member, before, after):
     if before.channel is None and after.channel is not None:
         for r in range(n):
             if F'{member}' == name[r]:
-                await channel2.send(content=(f"{name1[r]}在{member.guild}的{after.channel}出現"))
+                await channel2.send(
+                    content=(f"{name1[r]}在{member.guild}的{after.channel}出現"))
 
                 await asyncio.sleep(1)
     elif before.channel != after.channel and after.channel != None:
         for r in range(n):
             if F'{member}' == name[r]:
-                await channel2.send(content=(f"{name1[r]}從{member.guild}的{before.channel}前往{member.guild}的{after.channel}"))
+                await channel2.send(content=(
+                    f"{name1[r]}從{member.guild}的{before.channel}前往{member.guild}的{after.channel}"
+                ))
                 await asyncio.sleep(1)
     elif after.channel is None:
         for r in range(n):
             if F'{member}' == name[r]:
-                await channel2.send(content=(f"{name1[r]}在{member.guild}的{before.channel}離開"))
+                await channel2.send(
+                    content=(f"{name1[r]}在{member.guild}的{before.channel}離開"))
                 await asyncio.sleep(1)
+
 
 @client.event
 async def on_message(ctx):
     channel2 = discord.utils.get(client.get_all_channels(),
-                                guild__name='123',
-                                name='m')
+                                 guild__name='123',
+                                 name='m')
     member = ctx.author
     for r in range(n):
         if F'{member}' == name[r]:
-            await channel2.send((f"{name1[r]}在{ctx.guild}的{ctx.channel}說話內容是:{ctx.content}"))
-            await asyncio.sleep(1)    
+            await channel2.send(
+                (f"{name1[r]}在{ctx.guild}的{ctx.channel}說話內容是:{ctx.content}"))
+            await asyncio.sleep(1)
+
+
 @client.command()
 async def 骰(ctx, us2: int = ''):
     a = []  #力量
@@ -469,10 +478,13 @@ async def 骰(ctx, us2: int = ''):
         elif a6 == 6 and a20 == 20:
             await ctx.send('投擲兩次，玩家任意選擇其中一項特徵。')
 
+
 if __name__ == "__main__":
-  # keep_alive.keep_alive()
-  keep_alive()
-  # forever()
-  # client.run(
-  #     'MTA4OTE3MzM2MzAzNDk1NTgzNg.Gd8iMMcNQKQpLa13j_A')
-  client.run('MTA4OTM3MzMwNTA1MzY1OTIyNg.GQJO-C.md0lUqEI9X_SZaV3HRICRXloLVFD15rg3j1OoU')
+    # keep_alive.keep_alive()
+    keep_alive()
+    # forever()
+    # client.run(
+    #     'MTA4OTE3MzM2MzAzNDk1NTgzNg.Gd8iMMcNQKQpLa13j_A')
+    client.run(
+        'MTA4OTM3MzMwNTA1MzY1OTIYNg.GVdYoM.Ty1-Sd5OnBExcpm8Z_0PBhgCUucgeU05RUQuIY'
+    
